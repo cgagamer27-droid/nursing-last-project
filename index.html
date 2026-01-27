@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚨 Belle Vue Hospital Call Station</title>
+
+<style>
+/* লোগোর সাথে মিল রেখে ফন্ট */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@700&display=swap');
+
+body {
+    background-color: #0d0d0d;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- লোগো স্টাইল ইন্ট্রো (BIGGER & EXACT STYLE) --- */
+.intro-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.hospital-brand {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.belle-vue {
+    color: #1B9D4A; /* লোগোর সেই বিশেষ সবুজ */
+    font-size: 85px; /* ফন্ট সাইজ বড় করা হয়েছে */
+    letter-spacing: -2px;
+    display: block;
+}
+
+.hospital-text {
+    color: #E31E24; /* লোগোর সেই বিশেষ লাল */
+    font-size: 55px; /* বড় সাইজ */
+    display: block;
+    margin-top: -10px;
+    letter-spacing: 2px;
+}
+
+.sub-title {
+    font-size: 22px;
+    color: #ffffff;
+    background: #E31E24;
+    display: inline-block;
+    padding: 8px 30px;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: bold;
+    letter-spacing: 5px;
+}
+/* --- ইন্ট্রো শেষ --- */
+
+.reset-all-btn {
+    background-color: #ffcc00;
+    color: black;
+    border: none;
+    padding: 15px 40px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 40px;
+    transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.4);
+}
+
+.reset-all-btn:hover {
+    background-color: #e6b800;
+    transform: scale(1.05);
+}
+
+#call-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* ROOM CARD */
+.room-card {
+    background: linear-gradient(145deg, #E31E24, #990000);
+    padding: 20px 30px;
+    border-radius: 15px;
+    font-size: 32px;
+    font-weight: bold;
+    box-shadow: 0 0 25px rgba(227, 30, 36, 0.6);
+    border: 3px solid white;
+    min-width: 220px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: blink 1s infinite;
+}
+
+.remove-btn {
+    background: white;
+    color: #E31E24;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.remove-btn:hover {
+    background: black;
+    color: white;
+}
+
+@keyframes blink {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.no-call {
+    font-size: 30px;
+    color: #444;
+    margin-top: 80px;
+    font-weight: bold;
+    border: 3px dashed #333;
+    padding: 40px;
+    border-radius: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="intro-container">
+    <div class="hospital-brand">
+        <span class="belle-vue">BELLE VUE</span>
+        <span class="hospital-text">Hospital</span>
+    </div>
+    <br>
+    <div class="sub-title">NURSING CALL SYSTEM</div>
+</div>
+
+<button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
+
+<div id="call-container">
+    <div class="no-call">SYSTEM ONLINE - WAITING...</div>
+</div>
+
+<audio id="call-sound" loop>
+    <source src="https://www.soundjay.com/buttons/sounds/beep-01a.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+    databaseURL: "https://nurse-call-system-a7561-default-rtdb.firebaseio.com/"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const sound = document.getElementById('call-sound');
+
+db.ref('calls').on('value', snapshot => {
+    const container = document.getElementById('call-container');
+    container.innerHTML = "";
+    const data = snapshot.val();
+
+    let hasActiveCall = false;
+
+    if (data) {
+        Object.keys(data).forEach(room => {
+            if (data[room] === true) {
+                hasActiveCall = true;
+
+                const card = document.createElement('div');
+                card.className = 'room-card';
+
+                card.innerHTML = `
+                    <span>ROOM ${room}</span>
+                    <button class="remove-btn" onclick="removeRoom('${room}')">✕</button>
+                `;
+
+                container.appendChild(card);
+            }
+        });
+    }
+
+    if (hasActiveCall) {
+        sound.play().catch(()=>{});
+    } else {
+        sound.pause();
+        sound.currentTime = 0;
+        container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
+    }
+});
+
+function removeRoom(room) {
+    if (confirm(`Remove ROOM ${room}?`)) {
+        db.ref('calls/' + room).remove();
+    }
+}
+
+function resetAllRooms() {
+    if (confirm("Clear ALL rooms and stop sound?")) {
+        db.ref('calls').remove();
+    }
+}
+
+document.body.addEventListener('click', ()=>{}, { once: true });
+</script>
+
+</body>
+</html>
