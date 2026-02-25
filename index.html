@@ -62,37 +62,55 @@ header { padding: 30px 10px; text-align: center; }
     margin-top: -10px;
 }
 
-/* Summary Bar */
+/* Summary & Global Clear */
+.controls-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
 #summary-bar {
     display: none;
-    margin: 20px auto;
     background: rgba(255, 31, 38, 0.15);
     border: 2px solid var(--primary-red);
-    padding: 15px 40px;
+    padding: 10px 40px;
     border-radius: 15px;
     width: fit-content;
     animation: pulse 1.5s infinite;
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 31, 38, 0.2); }
-    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 31, 38, 0.5); }
-    100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 31, 38, 0.2); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
-.count-text {
+.all-done-btn {
+    display: none; /* Only show when calls exist */
+    background: #ffcc00;
+    color: black;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: 900;
+    border-radius: 8px;
+    cursor: pointer;
     font-family: 'Orbitron', sans-serif;
-    font-size: 45px;
-    color: white;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+    transition: 0.2s;
 }
 
-/* Room Box - বড় এবং পরিষ্কার */
+.all-done-btn:hover { background: white; transform: scale(1.05); }
+
+/* Room Box */
 #call-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
-    padding: 30px;
+    padding: 20px;
 }
 
 .room-box {
@@ -103,40 +121,31 @@ header { padding: 30px 10px; text-align: center; }
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-width: 160px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    min-width: 150px;
     animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes pop {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
-}
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 
-/* রুম নম্বর ফন্ট বড় করা হয়েছে */
 .room-num {
     font-family: 'Orbitron', sans-serif;
-    font-size: 65px; /* অনেক বড় সাইজ */
+    font-size: 70px;
     font-weight: 900;
     color: white;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .clear-btn {
     background: white;
     color: #800000;
     border: none;
-    padding: 8px 25px;
+    padding: 10px 25px;
     border-radius: 30px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
-    text-transform: uppercase;
+    font-size: 18px;
 }
-
-.clear-btn:hover { background: #000; color: #fff; }
 
 /* Siren Background */
 #flash-bg {
@@ -148,8 +157,8 @@ header { padding: 30px 10px; text-align: center; }
     animation: flash 0.6s infinite alternate;
 }
 @keyframes flash { 
-    from { background: rgba(0,0,255,0.08); } 
-    to { background: rgba(255,0,0,0.12); } 
+    from { background: rgba(0,0,255,0.1); } 
+    to { background: rgba(255,0,0,0.15); } 
 }
 
 .empty-msg { opacity: 0.2; font-size: 24px; margin-top: 100px; }
@@ -169,9 +178,13 @@ header { padding: 30px 10px; text-align: center; }
     <span class="hospital-tag">Hospital</span>
 </header>
 
-<div id="summary-bar">
-    <span class="count-text" id="total-calls">0</span> 
-    <span style="font-size:18px; text-transform:uppercase; margin-left:15px; letter-spacing: 2px;">Active Calls</span>
+<div class="controls-area">
+    <div id="summary-bar">
+        <span style="font-size: 40px; font-family:'Orbitron'; color: white;" id="total-calls">0</span> 
+        <span style="font-size:16px; text-transform:uppercase; margin-left:10px; letter-spacing: 2px;">Calls Active</span>
+    </div>
+    
+    <button class="all-done-btn" id="all-done-btn" onclick="clearAllRooms()">✔️ ALL DONE - CLEAR ALL</button>
 </div>
 
 <div id="call-container">
@@ -205,9 +218,9 @@ function startSiren() {
         let o = audio.createOscillator();
         let g = audio.createGain();
         o.type = 'sawtooth';
-        o.frequency.setValueAtTime(600, t);
-        o.frequency.exponentialRampToValueAtTime(1200, t + 0.6);
-        o.frequency.exponentialRampToValueAtTime(600, t + 1.2);
+        o.frequency.setValueAtTime(650, t);
+        o.frequency.exponentialRampToValueAtTime(1100, t + 0.6);
+        o.frequency.exponentialRampToValueAtTime(650, t + 1.2);
         g.gain.setValueAtTime(0, t);
         g.gain.linearRampToValueAtTime(0.4, t + 0.1);
         g.gain.linearRampToValueAtTime(0, t + 1.2);
@@ -222,6 +235,7 @@ db.ref('calls').on('value', snap => {
     const data = snap.val();
     const container = document.getElementById('call-container');
     const bar = document.getElementById('summary-bar');
+    const allDoneBtn = document.getElementById('all-done-btn');
     const countLabel = document.getElementById('total-calls');
     
     container.innerHTML = "";
@@ -234,7 +248,7 @@ db.ref('calls').on('value', snap => {
                 const box = document.createElement('div');
                 box.className = 'room-box';
                 box.innerHTML = `<span class="room-num">${room}</span>
-                                <button class="clear-btn" onclick="clearRoom('${room}')">Done</button>`;
+                                <button class="clear-btn" onclick="clearRoom('${room}')">DONE</button>`;
                 container.appendChild(box);
             }
         });
@@ -243,9 +257,11 @@ db.ref('calls').on('value', snap => {
     if (activeRooms > 0) {
         countLabel.textContent = activeRooms;
         bar.style.display = 'block';
+        allDoneBtn.style.display = 'block';
         startSiren();
     } else {
         bar.style.display = 'none';
+        allDoneBtn.style.display = 'none';
         isAlerting = false;
         document.getElementById('flash-bg').style.display = 'none';
         container.innerHTML = '<div class="empty-msg">✅ ALL ROOMS CLEAR</div>';
@@ -253,6 +269,12 @@ db.ref('calls').on('value', snap => {
 });
 
 function clearRoom(r) { db.ref('calls/' + r).remove(); }
+
+function clearAllRooms() {
+    if (confirm("Are you sure you want to clear ALL room calls?")) {
+        db.ref('calls').remove();
+    }
+}
 </script>
 </body>
 </html>
