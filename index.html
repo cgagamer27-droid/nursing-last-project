@@ -74,6 +74,21 @@ body {
     transform: scale(1.05);
 }
 
+/* Sound unlock button */
+#unlock-btn {
+    display: none;
+    background: #1B9D4A;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    animation: blink 1s infinite;
+}
+
 #call-container {
     display: flex;
     flex-wrap: wrap;
@@ -146,21 +161,99 @@ body {
     <div class="sub-title">NURSING CALL SYSTEM</div>
 </div>
 
+<!-- Sound unlock button (browser policy এর জন্য) -->
+<button id="unlock-btn" onclick="unlockAudio()">🔊 CLICK TO ENABLE SOUND</button>
+
 <button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
 
 <div id="call-container">
     <div class="no-call">⏳ CONNECTING...</div>
 </div>
 
-<audio id="call-sound" loop>
-    <source src="https://www.soundjay.com/buttons/sounds/beep-01a.mp3" type="audio/mpeg">
-</audio>
-
-<!-- ✅ Firebase SDK গুলো BODY এর শেষে — তাই আগে load হবে -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+  // ===== WEB AUDIO ALARM =====
+  let audioCtx = null;
+  let alarmInterval = null;
+  let audioUnlocked = false;
+
+  function getAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioCtx;
+  }
+
+  // Hospital alarm tone — দুটো frequency পালাপালি বাজবে
+  function playAlarmTone() {
+    const ctx = getAudioCtx();
+
+    // Tone 1: HIGH
+    const beep1 = () => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime); // High pitch
+      gain.gain.setValueAtTime(0.8, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.4);
+    };
+
+    // Tone 2: LOW
+    const beep2 = () => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, ctx.currentTime); // Low pitch
+      gain.gain.setValueAtTime(0.8, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.4);
+    };
+
+    // HIGH → LOW → HIGH → LOW → pause → repeat
+    beep1();
+    setTimeout(beep2, 450);
+    setTimeout(beep1, 900);
+    setTimeout(beep2, 1350);
+  }
+
+  function startAlarm() {
+    if (alarmInterval) return; // already running
+    playAlarmTone(); // তুরন্ত বাজাও
+    alarmInterval = setInterval(playAlarmTone, 2200); // প্রতি ২.২ সেকেন্ডে repeat
+  }
+
+  function stopAlarm() {
+    if (alarmInterval) {
+      clearInterval(alarmInterval);
+      alarmInterval = null;
+    }
+  }
+
+  function unlockAudio() {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    audioUnlocked = true;
+    document.getElementById('unlock-btn').style.display = 'none';
+    // Test beep
+    playAlarmTone();
+  }
+
+  // ===== FIREBASE =====
   const firebaseConfig = {
     databaseURL: "https://unlimited-nursing-calling-blv-default-rtdb.firebaseio.com/"
   };
@@ -169,8 +262,8 @@ body {
     firebase.initializeApp(firebaseConfig);
   }
 
-  const db    = firebase.database();
-  const sound = document.getElementById('call-sound');
+  const db = firebase.database();
+  let previousCallCount = 0;
 
   db.ref('calls').on('value', snapshot => {
     const container = document.getElementById('call-container');
@@ -178,11 +271,14 @@ body {
     const data = snapshot.val();
 
     let hasActiveCall = false;
+    let currentCallCount = 0;
 
     if (data) {
       Object.keys(data).forEach(room => {
         if (data[room] === true) {
           hasActiveCall = true;
+          currentCallCount++;
+
           const card = document.createElement('div');
           card.className = 'room-card';
           card.innerHTML = `
@@ -195,20 +291,27 @@ body {
     }
 
     if (hasActiveCall) {
-      sound.play().catch(() => {});
+      // নতুন call এলে alarm বাজাও
+      if (currentCallCount > previousCallCount || !alarmInterval) {
+        startAlarm();
+      }
+      // Audio context suspended থাকলে unlock button দেখাও
+      if (audioCtx && audioCtx.state === 'suspended') {
+        document.getElementById('unlock-btn').style.display = 'inline-block';
+      }
     } else {
-      sound.pause();
-      sound.currentTime = 0;
+      stopAlarm();
+      document.getElementById('unlock-btn').style.display = 'none';
       container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
     }
 
+    previousCallCount = currentCallCount;
+
   }, error => {
-    // Firebase Rules ঠিক না হলে এখানে error দেখাবে
     document.getElementById('call-container').innerHTML =
       `<div class="no-call" style="color:#E31E24; border-color:#E31E24;">
         ❌ Firebase Error:<br>${error.message}<br><br>
-        <span style="font-size:18px">Firebase Console → Realtime Database → Rules<br>
-        .read: true করুন</span>
+        <span style="font-size:18px">Firebase Rules → .read: true করুন</span>
       </div>`;
   });
 
@@ -221,10 +324,17 @@ body {
   function resetAllRooms() {
     if (confirm("Clear ALL rooms and stop sound?")) {
       db.ref('calls').remove();
+      stopAlarm();
     }
   }
 
-  document.body.addEventListener('click', () => {}, { once: true });
+  // First click এ audio unlock হবে automatically
+  document.body.addEventListener('click', () => {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    audioUnlocked = true;
+    document.getElementById('unlock-btn').style.display = 'none';
+  }, { once: true });
 </script>
 
 </body>
