@@ -6,12 +6,12 @@
 <title>🚨 Nurse Dashboard - Belle Vue</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Poppins:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Poppins:wght@600&display=swap');
 
 :root {
-    --primary-red: #E31E24;
+    --primary-red: #ff1f26;
     --neon-green: #1B9D4A;
-    --bg-black: #080808;
+    --bg-black: #050505;
 }
 
 body {
@@ -19,14 +19,13 @@ body {
     background-color: var(--bg-black);
     color: white;
     font-family: 'Poppins', sans-serif;
-    text-align: center;
 }
 
-/* Activation Overlay */
+/* Activation Screen */
 #activation-screen {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.98);
+    background: var(--bg-black);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,127 +34,132 @@ body {
 }
 
 .start-btn {
-    padding: 15px 40px;
-    font-size: 20px;
+    padding: 20px 60px;
+    font-size: 24px;
     background: var(--primary-red);
     color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 12px;
     cursor: pointer;
     font-family: 'Orbitron', sans-serif;
-    box-shadow: 0 0 20px var(--primary-red);
+    box-shadow: 0 0 30px rgba(255, 31, 38, 0.5);
 }
 
 /* Header */
-header { padding: 20px 10px; }
+header { padding: 30px 10px; text-align: center; }
 .belle-vue {
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
-    font-size: 50px;
+    font-size: clamp(40px, 8vw, 65px);
     color: var(--neon-green);
     margin: 0;
 }
 .hospital-tag {
-    font-size: 25px;
+    font-size: clamp(20px, 4vw, 30px);
     color: var(--primary-red);
     font-weight: bold;
-    margin-top: -10px;
     display: block;
+    margin-top: -10px;
 }
 
-/* Summary Box */
+/* Summary Bar */
 #summary-bar {
     display: none;
-    margin: 10px auto;
-    background: rgba(227, 30, 36, 0.1);
-    border: 1px solid var(--primary-red);
-    padding: 10px 25px;
-    border-radius: 50px;
+    margin: 20px auto;
+    background: rgba(255, 31, 38, 0.15);
+    border: 2px solid var(--primary-red);
+    padding: 15px 40px;
+    border-radius: 15px;
     width: fit-content;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 31, 38, 0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 31, 38, 0.5); }
+    100% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 31, 38, 0.2); }
 }
 
 .count-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 30px;
-    color: var(--primary-red);
+    font-size: 45px;
+    color: white;
 }
 
-/* Compact Room Container */
+/* Room Box - বড় এবং পরিষ্কার */
 #call-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 20px;
+    padding: 30px;
 }
 
-/* রুম নম্বর ছোট করা হয়েছে এখানে */
-.room-chip {
-    background: linear-gradient(145deg, #222, #000);
-    border: 1.5px solid var(--primary-red);
-    padding: 8px 15px;
-    border-radius: 8px;
+.room-box {
+    background: linear-gradient(145deg, #cc1a1f, #800000);
+    border: 4px solid #fff;
+    padding: 25px 40px;
+    border-radius: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    min-width: 100px;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    justify-content: center;
+    min-width: 160px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes popIn {
-    from { transform: scale(0.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+@keyframes pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
 }
 
+/* রুম নম্বর ফন্ট বড় করা হয়েছে */
 .room-num {
     font-family: 'Orbitron', sans-serif;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 65px; /* অনেক বড় সাইজ */
+    font-weight: 900;
     color: white;
+    line-height: 1;
+    margin-bottom: 10px;
 }
 
-.clear-x {
-    color: var(--primary-red);
-    cursor: pointer;
+.clear-btn {
+    background: white;
+    color: #800000;
+    border: none;
+    padding: 8px 25px;
+    border-radius: 30px;
     font-weight: bold;
-    font-size: 18px;
-    padding: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
 }
 
-.clear-x:hover { color: white; }
+.clear-btn:hover { background: #000; color: #fff; }
 
-/* Siren Flash */
+/* Siren Background */
 #flash-bg {
     display: none;
     position: fixed;
     top:0; left:0; width:100%; height:100%;
     pointer-events: none;
     z-index: 998;
-    animation: flash 0.5s infinite alternate;
+    animation: flash 0.6s infinite alternate;
 }
-@keyframes flash { from { background: rgba(227,30,36,0); } to { background: rgba(227,30,36,0.1); } }
-
-.empty-msg { opacity: 0.3; margin-top: 50px; }
-
-.reset-btn {
-    margin-top: 40px;
-    background: #444;
-    color: #ccc;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
+@keyframes flash { 
+    from { background: rgba(0,0,255,0.08); } 
+    to { background: rgba(255,0,0,0.12); } 
 }
+
+.empty-msg { opacity: 0.2; font-size: 24px; margin-top: 100px; }
 </style>
 </head>
 <body>
 
 <div id="activation-screen">
-    <h1 style="color:var(--neon-green); font-family:'Orbitron'">BELLE VUE</h1>
-    <button class="start-btn" onclick="startSystem()">ACTIVATE DASHBOARD</button>
+    <h1 style="color:var(--neon-green); font-family:'Orbitron'; font-size: 50px;">BELLE VUE</h1>
+    <button class="start-btn" onclick="initDashboard()">START STATION</button>
 </div>
 
 <div id="flash-bg"></div>
@@ -163,96 +167,92 @@ header { padding: 20px 10px; }
 <header>
     <span class="belle-vue">BELLE VUE</span>
     <span class="hospital-tag">Hospital</span>
-    <div style="font-size:12px; color:#666; letter-spacing:3px; margin-top:10px;">NURSING CALL LIVE FEED</div>
 </header>
 
 <div id="summary-bar">
-    <span style="font-size:20px">🚨</span> 
     <span class="count-text" id="total-calls">0</span> 
-    <span style="font-size:12px; text-transform:uppercase; margin-left:10px">Active Calls</span>
+    <span style="font-size:18px; text-transform:uppercase; margin-left:15px; letter-spacing: 2px;">Active Calls</span>
 </div>
 
 <div id="call-container">
-    <div class="empty-msg">WAITING FOR CALLS...</div>
+    <div class="empty-msg">SYSTEM READY...</div>
 </div>
-
-<button class="reset-btn" onclick="resetAll()">SYSTEM RESET</button>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-let aCtx = null;
-let isSirenOn = false;
+let audio = null;
+let isAlerting = false;
 
 const firebaseConfig = { databaseURL: "https://unlimited-nursing-calling-blv-default-rtdb.firebaseio.com/" };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-function startSystem() {
-    aCtx = new (window.AudioContext || window.webkitAudioContext)();
+function initDashboard() {
+    audio = new (window.AudioContext || window.webkitAudioContext)();
     document.getElementById('activation-screen').style.display = 'none';
 }
 
-function triggerSiren() {
-    if (isSirenOn || !aCtx) return;
-    isSirenOn = true;
+function startSiren() {
+    if (isAlerting || !audio) return;
+    isAlerting = true;
     document.getElementById('flash-bg').style.display = 'block';
     
-    const play = () => {
-        if (!isSirenOn) return;
-        let n = aCtx.currentTime;
-        let o = aCtx.createOscillator();
-        let g = aCtx.createGain();
+    const alarm = () => {
+        if (!isAlerting) return;
+        let t = audio.currentTime;
+        let o = audio.createOscillator();
+        let g = audio.createGain();
         o.type = 'sawtooth';
-        o.frequency.setValueAtTime(700, n);
-        o.frequency.exponentialRampToValueAtTime(1000, n + 0.6);
-        o.frequency.exponentialRampToValueAtTime(700, n + 1.2);
-        g.gain.setValueAtTime(0, n);
-        g.gain.linearRampToValueAtTime(0.3, n + 0.1);
-        g.gain.linearRampToValueAtTime(0, n + 1.2);
-        o.connect(g); g.connect(aCtx.destination);
-        o.start(n); o.stop(n + 1.2);
-        setTimeout(play, 1300);
+        o.frequency.setValueAtTime(600, t);
+        o.frequency.exponentialRampToValueAtTime(1200, t + 0.6);
+        o.frequency.exponentialRampToValueAtTime(600, t + 1.2);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.4, t + 0.1);
+        g.gain.linearRampToValueAtTime(0, t + 1.2);
+        o.connect(g); g.connect(audio.destination);
+        o.start(t); o.stop(t + 1.2);
+        setTimeout(alarm, 1300);
     };
-    play();
+    alarm();
 }
 
 db.ref('calls').on('value', snap => {
     const data = snap.val();
     const container = document.getElementById('call-container');
     const bar = document.getElementById('summary-bar');
-    const countEl = document.getElementById('total-calls');
+    const countLabel = document.getElementById('total-calls');
     
     container.innerHTML = "";
-    let count = 0;
+    let activeRooms = 0;
 
     if (data) {
         Object.keys(data).forEach(room => {
             if (data[room] === true) {
-                count++;
-                const chip = document.createElement('div');
-                chip.className = 'room-chip';
-                chip.innerHTML = `<span class="room-num">${room}</span><span class="clear-x" onclick="clearRoom('${room}')">✕</span>`;
-                container.appendChild(chip);
+                activeRooms++;
+                const box = document.createElement('div');
+                box.className = 'room-box';
+                box.innerHTML = `<span class="room-num">${room}</span>
+                                <button class="clear-btn" onclick="clearRoom('${room}')">Done</button>`;
+                container.appendChild(box);
             }
         });
     }
 
-    if (count > 0) {
-        countEl.textContent = count;
+    if (activeRooms > 0) {
+        countLabel.textContent = activeRooms;
         bar.style.display = 'block';
-        triggerSiren();
+        startSiren();
     } else {
         bar.style.display = 'none';
-        isSirenOn = false;
+        isAlerting = false;
         document.getElementById('flash-bg').style.display = 'none';
         container.innerHTML = '<div class="empty-msg">✅ ALL ROOMS CLEAR</div>';
     }
 });
 
 function clearRoom(r) { db.ref('calls/' + r).remove(); }
-function resetAll() { if(confirm("Reset all?")) db.ref('calls').remove(); }
 </script>
 </body>
 </html>
