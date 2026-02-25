@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚨Belle Vue Hospital Call Station</title>
+<title>🚨Belle Vue Hospital Call Station.</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@700&display=swap');
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     background-color: #0d0d0d;
@@ -18,10 +16,9 @@ body {
     padding: 20px;
 }
 
-/* ===== HEADER ===== */
 .intro-container {
     margin-top: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .hospital-brand {
@@ -58,7 +55,7 @@ body {
     letter-spacing: 5px;
 }
 
-/* ===== ACTIVE CALL SUMMARY BAR ===== */
+/* ===== SUMMARY BAR ===== */
 #summary-bar {
     display: none;
     margin: 0 auto 30px auto;
@@ -67,7 +64,6 @@ body {
     border: 2px solid #E31E24;
     border-radius: 16px;
     padding: 18px 30px;
-    box-shadow: 0 0 30px rgba(227, 30, 36, 0.5);
     animation: pulseBorder 1.2s infinite;
 }
 
@@ -85,10 +81,7 @@ body {
     flex-wrap: wrap;
 }
 
-.summary-icon {
-    font-size: 42px;
-    animation: blink 0.6s infinite;
-}
+.summary-icon { font-size: 42px; animation: blink 0.6s infinite; }
 
 .summary-count {
     font-family: 'Montserrat', sans-serif;
@@ -137,40 +130,18 @@ body {
     letter-spacing: 1px;
     animation: blink 0.8s infinite;
 }
-
-/* ===== STANDBY BAR ===== */
-#standby-bar {
-    display: none;
-    margin: 0 auto 30px auto;
-    max-width: 900px;
-    background: linear-gradient(135deg, #001a00, #003300);
-    border: 2px solid #1B9D4A;
-    border-radius: 16px;
-    padding: 16px 30px;
-    font-size: 22px;
-    font-weight: bold;
-    color: #1B9D4A;
-    letter-spacing: 3px;
-}
-
-/* ===== BUTTONS ===== */
-.btn-row {
-    margin-bottom: 30px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+/* ===== SUMMARY BAR END ===== */
 
 .reset-all-btn {
     background-color: #ffcc00;
     color: black;
     border: none;
-    padding: 14px 36px;
-    font-size: 18px;
+    padding: 15px 40px;
+    font-size: 20px;
     font-weight: bold;
     border-radius: 10px;
     cursor: pointer;
+    margin-bottom: 40px;
     transition: 0.3s;
     box-shadow: 0 5px 20px rgba(255, 204, 0, 0.4);
 }
@@ -180,20 +151,6 @@ body {
     transform: scale(1.05);
 }
 
-#unlock-btn {
-    display: none;
-    background: #1B9D4A;
-    color: white;
-    border: none;
-    padding: 14px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 10px;
-    cursor: pointer;
-    animation: blink 1s infinite;
-}
-
-/* ===== ROOM CARDS ===== */
 #call-container {
     display: flex;
     flex-wrap: wrap;
@@ -207,13 +164,13 @@ body {
     border-radius: 15px;
     font-size: 32px;
     font-weight: bold;
-    box-shadow: 0 0 40px rgba(227, 30, 36, 0.9);
+    box-shadow: 0 0 25px rgba(227, 30, 36, 0.6);
     border: 3px solid white;
     min-width: 220px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    animation: blink 0.6s infinite;
+    animation: blink 1s infinite;
 }
 
 .remove-btn {
@@ -232,18 +189,21 @@ body {
     margin-left: 15px;
 }
 
-.remove-btn:hover { background: black; color: white; }
+.remove-btn:hover {
+    background: black;
+    color: white;
+}
 
 @keyframes blink {
-    0%   { opacity: 1;    transform: scale(1);    }
-    50%  { opacity: 0.75; transform: scale(0.97); }
-    100% { opacity: 1;    transform: scale(1);    }
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 .no-call {
     font-size: 30px;
     color: #444;
-    margin-top: 60px;
+    margin-top: 80px;
     font-weight: bold;
     border: 3px dashed #333;
     padding: 40px;
@@ -275,7 +235,6 @@ body {
 
 <div id="flash-overlay"></div>
 
-<!-- HEADER -->
 <div class="intro-container">
     <div class="hospital-brand">
         <span class="belle-vue">BELLE VUE</span>
@@ -285,12 +244,10 @@ body {
     <div class="sub-title">NURSING CALL SYSTEM</div>
 </div>
 
-<!-- ✅ ACTIVE CALL SUMMARY BAR -->
+<!-- SUMMARY BAR -->
 <div id="summary-bar">
     <div class="summary-top">
-        <div>
-            <div class="summary-icon">🚨</div>
-        </div>
+        <div><div class="summary-icon">🚨</div></div>
         <div>
             <div class="summary-count" id="summary-count">0</div>
             <div class="summary-label">Active Calls</div>
@@ -303,42 +260,30 @@ body {
     </div>
 </div>
 
-<!-- STANDBY BAR -->
-<div id="standby-bar">✅ &nbsp; ALL ROOMS CLEAR — SYSTEM STANDBY</div>
+<button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
 
-<!-- BUTTONS -->
-<div class="btn-row">
-    <button id="unlock-btn" onclick="unlockAudio()">🔊 CLICK TO ENABLE SOUND</button>
-    <button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
-</div>
-
-<!-- ROOM CARDS -->
 <div id="call-container">
-    <div class="no-call">⏳ CONNECTING...</div>
+    <div class="no-call">SYSTEM ONLINE - WAITING...</div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-  // ===== AMBULANCE SIREN =====
-  let audioCtx = null;
-  let sirenRunning = false;
-  let sirenTimeout = null;
-  let masterGain = null;
+// ===== AMBULANCE SIREN =====
+let audioCtx = null;
+let sirenRunning = false;
+let sirenTimeout = null;
 
-  function getCtx() {
+function getCtx() {
     if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = 1.0;
-      masterGain.connect(audioCtx.destination);
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
     return audioCtx;
-  }
+}
 
-  function playSirenCycle() {
+function playSirenCycle() {
     if (!sirenRunning) return;
     const ctx = getCtx();
     const now = ctx.currentTime;
@@ -346,7 +291,7 @@ body {
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
     osc.connect(gainNode);
-    gainNode.connect(masterGain);
+    gainNode.connect(ctx.destination);
 
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(550, now);
@@ -362,119 +307,94 @@ body {
     osc.stop(now + 1.4);
 
     sirenTimeout = setTimeout(playSirenCycle, 1450);
-  }
+}
 
-  function startSiren() {
+function startSiren() {
     if (sirenRunning) return;
     sirenRunning = true;
     getCtx();
     playSirenCycle();
     document.getElementById('flash-overlay').style.display = 'block';
-  }
+}
 
-  function stopSiren() {
+function stopSiren() {
     sirenRunning = false;
     if (sirenTimeout) { clearTimeout(sirenTimeout); sirenTimeout = null; }
     document.getElementById('flash-overlay').style.display = 'none';
-  }
+}
 
-  function unlockAudio() {
-    getCtx();
-    document.getElementById('unlock-btn').style.display = 'none';
-  }
-
-  // ===== FIREBASE =====
-  const firebaseConfig = {
+// ===== FIREBASE =====
+const firebaseConfig = {
     databaseURL: "https://unlimited-nursing-calling-blv-default-rtdb.firebaseio.com/"
-  };
+};
 
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  let hasActiveCalls = false;
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  db.ref('calls').on('value', snapshot => {
+db.ref('calls').on('value', snapshot => {
     const container = document.getElementById('call-container');
-    const summaryBar  = document.getElementById('summary-bar');
-    const standbyBar  = document.getElementById('standby-bar');
-    const summaryCount     = document.getElementById('summary-count');
-    const summaryRoomList  = document.getElementById('summary-room-list');
+    const summaryBar = document.getElementById('summary-bar');
+    const summaryCount = document.getElementById('summary-count');
+    const summaryRoomList = document.getElementById('summary-room-list');
 
     container.innerHTML = "";
     summaryRoomList.innerHTML = "";
 
     const data = snapshot.val();
+    let hasActiveCall = false;
     let activeRooms = [];
 
     if (data) {
-      Object.keys(data).forEach(room => {
-        if (data[room] === true) {
-          activeRooms.push(room);
-        }
-      });
+        Object.keys(data).forEach(room => {
+            if (data[room] === true) {
+                hasActiveCall = true;
+                activeRooms.push(room);
+
+                const card = document.createElement('div');
+                card.className = 'room-card';
+                card.innerHTML = `
+                    <span>ROOM ${room}</span>
+                    <button class="remove-btn" onclick="removeRoom('${room}')">✕</button>
+                `;
+                container.appendChild(card);
+            }
+        });
     }
 
-    hasActiveCalls = activeRooms.length > 0;
+    if (hasActiveCall) {
+        // Summary bar update
+        summaryCount.textContent = activeRooms.length;
+        activeRooms.forEach(room => {
+            const chip = document.createElement('span');
+            chip.className = 'summary-room-chip';
+            chip.textContent = 'ROOM ' + room;
+            summaryRoomList.appendChild(chip);
+        });
+        summaryBar.style.display = 'block';
 
-    if (hasActiveCalls) {
-      // ✅ Summary bar update
-      summaryCount.textContent = activeRooms.length;
-      activeRooms.forEach(room => {
-        const chip = document.createElement('span');
-        chip.className = 'summary-room-chip';
-        chip.textContent = 'ROOM ' + room;
-        summaryRoomList.appendChild(chip);
-      });
-      summaryBar.style.display = 'block';
-      standbyBar.style.display = 'none';
-
-      // Room cards
-      activeRooms.forEach(room => {
-        const card = document.createElement('div');
-        card.className = 'room-card';
-        card.innerHTML = `
-          <span>🔔 ROOM ${room}</span>
-          <button class="remove-btn" onclick="removeRoom('${room}')">✕</button>
-        `;
-        container.appendChild(card);
-      });
-
-      startSiren();
-      if (audioCtx && audioCtx.state === 'suspended') {
-        document.getElementById('unlock-btn').style.display = 'inline-block';
-      }
-
+        startSiren();
     } else {
-      summaryBar.style.display = 'none';
-      standbyBar.style.display = 'block';
-      stopSiren();
-      document.getElementById('unlock-btn').style.display = 'none';
-      container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
+        summaryBar.style.display = 'none';
+        stopSiren();
+        container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
     }
+});
 
-  }, error => {
-    document.getElementById('call-container').innerHTML =
-      `<div class="no-call" style="color:#E31E24; border-color:#E31E24;">
-        ❌ Firebase Error:<br>${error.message}
-      </div>`;
-  });
-
-  function removeRoom(room) {
+function removeRoom(room) {
     if (confirm(`Remove ROOM ${room}?`)) {
-      db.ref('calls/' + room).remove();
+        db.ref('calls/' + room).remove();
     }
-  }
+}
 
-  function resetAllRooms() {
+function resetAllRooms() {
     if (confirm("Clear ALL rooms and stop sound?")) {
-      db.ref('calls').remove();
-      stopSiren();
+        db.ref('calls').remove();
+        stopSiren();
     }
-  }
+}
 
-  document.body.addEventListener('click', () => {
-    getCtx();
-    document.getElementById('unlock-btn').style.display = 'none';
-  }, { once: true });
+// First click = audio unlock
+document.body.addEventListener('click', () => { getCtx(); }, { once: true });
 </script>
 
 </body>
