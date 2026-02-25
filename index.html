@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚨Belle Vue Hospital Call Station.</title>
+<title>🚨 Belle Vue Hospital Call Station</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@700&display=swap');
@@ -14,6 +14,7 @@ body {
     font-family: 'Poppins', sans-serif;
     text-align: center;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .intro-container {
@@ -55,22 +56,22 @@ body {
     letter-spacing: 5px;
 }
 
-/* ===== SUMMARY BAR ===== */
+/* ===== SUMMARY BAR (Cleaned up) ===== */
 #summary-bar {
     display: none;
     margin: 0 auto 30px auto;
-    max-width: 900px;
+    max-width: 400px;
     background: linear-gradient(135deg, #1a0000, #3a0000);
     border: 2px solid #E31E24;
     border-radius: 16px;
-    padding: 18px 30px;
+    padding: 20px;
     animation: pulseBorder 1.2s infinite;
 }
 
 @keyframes pulseBorder {
-    0%   { box-shadow: 0 0 20px rgba(227,30,36,0.4); }
-    50%  { box-shadow: 0 0 50px rgba(227,30,36,0.9); }
-    100% { box-shadow: 0 0 20px rgba(227,30,36,0.4); }
+    0%   { box-shadow: 0 0 15px rgba(227,30,36,0.4); }
+    50%  { box-shadow: 0 0 35px rgba(227,30,36,0.8); }
+    100% { box-shadow: 0 0 15px rgba(227,30,36,0.4); }
 }
 
 .summary-top {
@@ -78,60 +79,25 @@ body {
     align-items: center;
     justify-content: center;
     gap: 20px;
-    flex-wrap: wrap;
 }
 
-.summary-icon { font-size: 42px; animation: blink 0.6s infinite; }
+.summary-icon { font-size: 45px; animation: blink 0.6s infinite; }
 
 .summary-count {
     font-family: 'Montserrat', sans-serif;
-    font-size: 52px;
+    font-size: 60px;
     color: #E31E24;
     line-height: 1;
 }
 
 .summary-label {
-    font-size: 15px;
+    font-size: 14px;
     color: #aaa;
     text-transform: uppercase;
     letter-spacing: 2px;
-    margin-top: 2px;
 }
 
-.summary-divider {
-    width: 2px;
-    height: 60px;
-    background: #E31E24;
-    opacity: 0.4;
-}
-
-.summary-rooms-label {
-    font-size: 13px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-}
-
-#summary-room-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-}
-
-.summary-room-chip {
-    background: #E31E24;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 5px 16px;
-    border-radius: 30px;
-    letter-spacing: 1px;
-    animation: blink 0.8s infinite;
-}
-/* ===== SUMMARY BAR END ===== */
-
+/* ===== BUTTONS & CARDS ===== */
 .reset-all-btn {
     background-color: #ffcc00;
     color: black;
@@ -142,14 +108,11 @@ body {
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 40px;
-    transition: 0.3s;
-    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.4);
+    transition: 0.2s;
+    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.3);
 }
 
-.reset-all-btn:hover {
-    background-color: #e6b800;
-    transform: scale(1.05);
-}
+.reset-all-btn:active { transform: scale(0.95); }
 
 #call-container {
     display: flex;
@@ -160,73 +123,66 @@ body {
 
 .room-card {
     background: linear-gradient(145deg, #E31E24, #990000);
-    padding: 20px 30px;
+    padding: 25px 35px;
     border-radius: 15px;
-    font-size: 32px;
+    font-size: 35px;
     font-weight: bold;
-    box-shadow: 0 0 25px rgba(227, 30, 36, 0.6);
+    box-shadow: 0 0 25px rgba(227, 30, 36, 0.5);
     border: 3px solid white;
-    min-width: 220px;
+    min-width: 250px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    animation: blink 1s infinite;
+    animation: blink 0.8s infinite;
 }
 
 .remove-btn {
     background: white;
     color: #E31E24;
     border: none;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
     border-radius: 50%;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: 15px;
+    transition: 0.2s;
 }
 
-.remove-btn:hover {
-    background: black;
-    color: white;
-}
+.remove-btn:hover { background: black; color: white; }
 
 @keyframes blink {
     0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(0.98); }
+    50% { opacity: 0.85; transform: scale(0.98); }
     100% { opacity: 1; transform: scale(1); }
 }
 
 .no-call {
-    font-size: 30px;
-    color: #444;
-    margin-top: 80px;
-    font-weight: bold;
-    border: 3px dashed #333;
+    font-size: 28px;
+    color: #555;
+    margin-top: 60px;
+    border: 2px dashed #333;
     padding: 40px;
     border-radius: 20px;
 }
 
-/* Siren flash */
 #flash-overlay {
     display: none;
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none;
     z-index: 999;
-    animation: sirenFlash 1s infinite;
+    animation: sirenFlash 0.8s infinite;
 }
 
 @keyframes sirenFlash {
-    0%   { background: rgba(0,0,255,0.07); }
-    25%  { background: rgba(227,30,36,0.1); }
-    50%  { background: rgba(0,0,255,0.07); }
-    75%  { background: rgba(227,30,36,0.1); }
-    100% { background: rgba(0,0,255,0.07); }
+    0%   { background: rgba(0,0,255,0.05); }
+    50%  { background: rgba(227,30,36,0.08); }
+    100% { background: rgba(0,0,255,0.05); }
 }
 </style>
 </head>
@@ -244,112 +200,100 @@ body {
     <div class="sub-title">NURSING CALL SYSTEM</div>
 </div>
 
-<!-- SUMMARY BAR -->
 <div id="summary-bar">
     <div class="summary-top">
-        <div><div class="summary-icon">🚨</div></div>
+        <div class="summary-icon">🚨</div>
         <div>
             <div class="summary-count" id="summary-count">0</div>
             <div class="summary-label">Active Calls</div>
         </div>
-        <div class="summary-divider"></div>
-        <div>
-            <div class="summary-rooms-label">Rooms Calling</div>
-            <div id="summary-room-list"></div>
-        </div>
     </div>
 </div>
 
-<button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
+<button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL SYSTEM</button>
 
 <div id="call-container">
-    <div class="no-call">SYSTEM ONLINE - WAITING...</div>
+    <div class="no-call">SYSTEM ONLINE - WAITING FOR CALLS...</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-// ===== AMBULANCE SIREN =====
+// ===== AUDIO SYSTEM (Optimized) =====
 let audioCtx = null;
 let sirenRunning = false;
-let sirenTimeout = null;
+let sirenInterval = null;
 
-function getCtx() {
+function initAudio() {
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
-    return audioCtx;
 }
 
-function playSirenCycle() {
+function playSirenStep() {
     if (!sirenRunning) return;
-    const ctx = getCtx();
-    const now = ctx.currentTime;
-
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
+    const now = audioCtx.currentTime;
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(550, now);
-    osc.frequency.linearRampToValueAtTime(1050, now + 0.7);
-    osc.frequency.linearRampToValueAtTime(550, now + 1.4);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-    gainNode.gain.setValueAtTime(0.0, now);
-    gainNode.gain.linearRampToValueAtTime(0.7, now + 0.05);
-    gainNode.gain.setValueAtTime(0.7, now + 1.35);
-    gainNode.gain.linearRampToValueAtTime(0.0, now + 1.4);
+    // Smooth frequency transition
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(1000, now + 0.6);
+    osc.frequency.exponentialRampToValueAtTime(600, now + 1.2);
+
+    // Smooth volume transition
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.5, now + 0.1);
+    gain.gain.setValueAtTime(0.5, now + 1.1);
+    gain.gain.linearRampToValueAtTime(0, now + 1.2);
 
     osc.start(now);
-    osc.stop(now + 1.4);
-
-    sirenTimeout = setTimeout(playSirenCycle, 1450);
+    osc.stop(now + 1.2);
 }
 
 function startSiren() {
     if (sirenRunning) return;
     sirenRunning = true;
-    getCtx();
-    playSirenCycle();
     document.getElementById('flash-overlay').style.display = 'block';
+    playSirenStep();
+    sirenInterval = setInterval(playSirenStep, 1300);
 }
 
 function stopSiren() {
     sirenRunning = false;
-    if (sirenTimeout) { clearTimeout(sirenTimeout); sirenTimeout = null; }
+    clearInterval(sirenInterval);
     document.getElementById('flash-overlay').style.display = 'none';
 }
 
-// ===== FIREBASE =====
+// ===== FIREBASE CONFIG =====
 const firebaseConfig = {
     databaseURL: "https://unlimited-nursing-calling-blv-default-rtdb.firebaseio.com/"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// Real-time Listener
 db.ref('calls').on('value', snapshot => {
     const container = document.getElementById('call-container');
     const summaryBar = document.getElementById('summary-bar');
     const summaryCount = document.getElementById('summary-count');
-    const summaryRoomList = document.getElementById('summary-room-list');
 
     container.innerHTML = "";
-    summaryRoomList.innerHTML = "";
-
     const data = snapshot.val();
-    let hasActiveCall = false;
-    let activeRooms = [];
+    let activeRoomsCount = 0;
 
     if (data) {
         Object.keys(data).forEach(room => {
             if (data[room] === true) {
-                hasActiveCall = true;
-                activeRooms.push(room);
-
+                activeRoomsCount++;
+                
                 const card = document.createElement('div');
                 card.className = 'room-card';
                 card.innerHTML = `
@@ -361,17 +305,9 @@ db.ref('calls').on('value', snapshot => {
         });
     }
 
-    if (hasActiveCall) {
-        // Summary bar update
-        summaryCount.textContent = activeRooms.length;
-        activeRooms.forEach(room => {
-            const chip = document.createElement('span');
-            chip.className = 'summary-room-chip';
-            chip.textContent = 'ROOM ' + room;
-            summaryRoomList.appendChild(chip);
-        });
+    if (activeRoomsCount > 0) {
+        summaryCount.textContent = activeRoomsCount;
         summaryBar.style.display = 'block';
-
         startSiren();
     } else {
         summaryBar.style.display = 'none';
@@ -381,20 +317,19 @@ db.ref('calls').on('value', snapshot => {
 });
 
 function removeRoom(room) {
-    if (confirm(`Remove ROOM ${room}?`)) {
-        db.ref('calls/' + room).remove();
-    }
+    db.ref('calls/' + room).remove();
 }
 
 function resetAllRooms() {
-    if (confirm("Clear ALL rooms and stop sound?")) {
+    if (confirm("Clear all active calls?")) {
         db.ref('calls').remove();
-        stopSiren();
     }
 }
 
-// First click = audio unlock
-document.body.addEventListener('click', () => { getCtx(); }, { once: true });
+// Unlock audio on first touch/click
+['click', 'touchstart'].forEach(evt => 
+    document.body.addEventListener(evt, initAudio, { once: true })
+);
 </script>
 
 </body>
