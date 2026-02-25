@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚨Belle Vue Hospital Call Station.</title>
+<title>🚨Belle Vue Hospital Call Station</title>
 
 <style>
-/* লোগোর সাথে মিল রেখে ফন্ট */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@700&display=swap');
 
 body {
@@ -17,7 +16,6 @@ body {
     padding: 20px;
 }
 
-/* --- লোগো স্টাইল ইন্ট্রো (BIGGER & EXACT STYLE) --- */
 .intro-container {
     margin-top: 20px;
     margin-bottom: 40px;
@@ -31,15 +29,15 @@ body {
 }
 
 .belle-vue {
-    color: #1B9D4A; /* লোগোর সেই বিশেষ সবুজ */
-    font-size: 85px; /* ফন্ট সাইজ বড় করা হয়েছে */
+    color: #1B9D4A;
+    font-size: 85px;
     letter-spacing: -2px;
     display: block;
 }
 
 .hospital-text {
-    color: #E31E24; /* লোগোর সেই বিশেষ লাল */
-    font-size: 55px; /* বড় সাইজ */
+    color: #E31E24;
+    font-size: 55px;
     display: block;
     margin-top: -10px;
     letter-spacing: 2px;
@@ -56,7 +54,6 @@ body {
     font-weight: bold;
     letter-spacing: 5px;
 }
-/* --- ইন্ট্রো শেষ --- */
 
 .reset-all-btn {
     background-color: #ffcc00;
@@ -84,7 +81,6 @@ body {
     gap: 20px;
 }
 
-/* ROOM CARD */
 .room-card {
     background: linear-gradient(145deg, #E31E24, #990000);
     padding: 20px 30px;
@@ -122,9 +118,9 @@ body {
 }
 
 @keyframes blink {
-    0% { opacity: 1; transform: scale(1); }
+    0%  { opacity: 1;   transform: scale(1);    }
     50% { opacity: 0.8; transform: scale(0.98); }
-    100% { opacity: 1; transform: scale(1); }
+    100%{ opacity: 1;   transform: scale(1);    }
 }
 
 .no-call {
@@ -153,26 +149,30 @@ body {
 <button class="reset-all-btn" onclick="resetAllRooms()">🧹 RESET ALL & STOP SOUND</button>
 
 <div id="call-container">
-    <div class="no-call">SYSTEM ONLINE - WAITING...</div>
+    <div class="no-call">⏳ CONNECTING...</div>
 </div>
 
 <audio id="call-sound" loop>
     <source src="https://www.soundjay.com/buttons/sounds/beep-01a.mp3" type="audio/mpeg">
 </audio>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<!-- ✅ Firebase SDK গুলো BODY এর শেষে — তাই আগে load হবে -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-const firebaseConfig = {
+  const firebaseConfig = {
     databaseURL: "https://unlimited-nursing-calling-blv-default-rtdb.firebaseio.com/"
-};
+  };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const sound = document.getElementById('call-sound');
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
 
-db.ref('calls').on('value', snapshot => {
+  const db    = firebase.database();
+  const sound = document.getElementById('call-sound');
+
+  db.ref('calls').on('value', snapshot => {
     const container = document.getElementById('call-container');
     container.innerHTML = "";
     const data = snapshot.val();
@@ -180,49 +180,52 @@ db.ref('calls').on('value', snapshot => {
     let hasActiveCall = false;
 
     if (data) {
-        Object.keys(data).forEach(room => {
-            if (data[room] === true) {
-                hasActiveCall = true;
-
-                const card = document.createElement('div');
-                card.className = 'room-card';
-
-                card.innerHTML = `
-                    <span>ROOM ${room}</span>
-                    <button class="remove-btn" onclick="removeRoom('${room}')">✕</button>
-                `;
-
-                container.appendChild(card);
-            }
-        });
+      Object.keys(data).forEach(room => {
+        if (data[room] === true) {
+          hasActiveCall = true;
+          const card = document.createElement('div');
+          card.className = 'room-card';
+          card.innerHTML = `
+            <span>🔔 ROOM ${room}</span>
+            <button class="remove-btn" onclick="removeRoom('${room}')">✕</button>
+          `;
+          container.appendChild(card);
+        }
+      });
     }
 
     if (hasActiveCall) {
-        sound.play().catch(()=>{});
+      sound.play().catch(() => {});
     } else {
-        sound.pause();
-        sound.currentTime = 0;
-        container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
+      sound.pause();
+      sound.currentTime = 0;
+      container.innerHTML = '<div class="no-call">✅ ALL ROOMS CLEAR</div>';
     }
-});
 
-function removeRoom(room) {
+  }, error => {
+    // Firebase Rules ঠিক না হলে এখানে error দেখাবে
+    document.getElementById('call-container').innerHTML =
+      `<div class="no-call" style="color:#E31E24; border-color:#E31E24;">
+        ❌ Firebase Error:<br>${error.message}<br><br>
+        <span style="font-size:18px">Firebase Console → Realtime Database → Rules<br>
+        .read: true করুন</span>
+      </div>`;
+  });
+
+  function removeRoom(room) {
     if (confirm(`Remove ROOM ${room}?`)) {
-        db.ref('calls/' + room).remove();
+      db.ref('calls/' + room).remove();
     }
-}
+  }
 
-function resetAllRooms() {
+  function resetAllRooms() {
     if (confirm("Clear ALL rooms and stop sound?")) {
-        db.ref('calls').remove();
+      db.ref('calls').remove();
     }
-}
+  }
 
-document.body.addEventListener('click', ()=>{}, { once: true });
+  document.body.addEventListener('click', () => {}, { once: true });
 </script>
 
 </body>
-
 </html>
-
-
